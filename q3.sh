@@ -26,4 +26,37 @@ while :; do
 		fi
 done
 
+#compares a word against an input word using a given 'G', 'Y', 'S' pattern, where 'G' means the letters must match exactly, 'Y' means the letter exists elsewhere in the word, and 'S' means the letter shouldn't exist in the word. Returns 0 for a match, 1 otherwise. Both word and input word are compared in a case-insensitive manner.
 
+match_pattern() {
+	word=${1,,} #for handling case-sensitive
+	input_word=${2,,} #for handling case-sensitive
+	pattern=$3    
+	
+	for (( i=0; i<${#word}; i++ )); do
+		letter="${word:$i:1}"
+		input_letter="${input_word:$i:1}"
+		pattern_letter="${pattern:$i:1}"
+	
+		if [[ "$pattern_letter" == "G" ]]; then
+			if [[ "$letter" != "$input_letter" ]]; then
+				return 1
+			fi
+		elif [[ "$pattern_letter" == "Y" ]]; then 
+    			if [[ "$letter" == "$input_letter" ]]; then
+        			return 1
+   		 	elif ! [[ "$word" =~ "$input_letter" ]]; then
+   		 		return 1
+			fi
+		elif [[ "$pattern_letter" == "S" ]]; then
+			if [[ "$word" =~ "$input_letter" ]]; then
+				return 1
+			fi
+		fi
+	done
+	
+	return 0
+}
+
+match_pattern "hello" "hello" "GGGGG"
+echo "$?"
