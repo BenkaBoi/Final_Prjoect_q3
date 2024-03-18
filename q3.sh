@@ -50,7 +50,7 @@ match_pattern() {
     			if [[ "$letter" == "$input_letter" ]]; then
     				echo "Failed at Y: $letter == $input_letter"
         			return 1
-   		 	elif  [[ "$word" =~ "$input_letter" ]]; then
+   		 	elif  ! [[ "$word" =~ "$input_letter" ]]; then #We Added '!' for fixing the bug
    		 		echo "Failed at Y: $word does not contain $input_letter"
    		 		return 1
 			fi
